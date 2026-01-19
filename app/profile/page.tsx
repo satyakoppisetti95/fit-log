@@ -1,15 +1,34 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { BottomNavigation } from '@/components/BottomNavigation'
 import { useTheme } from '@/components/ThemeProvider'
-import { LogOut, Moon, Sun, Palette, ChevronDown } from 'lucide-react'
+import { LogOut, Moon, Sun, Palette, ChevronDown, Ruler, Edit } from 'lucide-react'
 
 export default function ProfilePage() {
   const { theme, accentColor, setTheme, setAccentColor } = useTheme()
+  const { data: session } = useSession()
+  const router = useRouter()
   const [isAccentDropdownOpen, setIsAccentDropdownOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  
+  const accentDropdownRef = useRef<HTMLDivElement>(null)
+
+  // Get unit values from session
+  const weightUnit = (session?.user?.weightUnit as 'kg' | 'lb') || 'kg'
+  const lengthUnit = (session?.user?.lengthUnit as 'm' | 'ft') || 'm'
+  const volumeUnit = (session?.user?.volumeUnit as 'ml' | 'fl oz') || 'ml'
+
+  const getUnitLabel = (type: 'weight' | 'length' | 'volume') => {
+    if (type === 'weight') {
+      return weightUnit === 'kg' ? 'Kilograms (kg)' : 'Pounds (lb)'
+    }
+    if (type === 'length') {
+      return lengthUnit === 'm' ? 'Meters (m)' : 'Feet (ft)'
+    }
+    return volumeUnit === 'ml' ? 'Milliliters (ml)' : 'Fluid Ounces (fl oz)'
+  }
 
   const accentColors = [
     { name: 'green', value: '#10b981', label: 'Green' },
@@ -23,19 +42,16 @@ export default function ProfilePage() {
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (accentDropdownRef.current && !accentDropdownRef.current.contains(event.target as Node)) {
         setIsAccentDropdownOpen(false)
       }
     }
 
-    if (isAccentDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
+    document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isAccentDropdownOpen])
+  }, [])
 
   const handleLogout = async () => {
     try {
@@ -106,7 +122,7 @@ export default function ProfilePage() {
             <Palette size={20} className="text-[var(--text-secondary)]" />
             <h2 className="text-lg font-semibold text-[var(--text-primary)]">Accent Color</h2>
           </div>
-          <div className="bg-[var(--bg-secondary)] rounded-lg p-4 relative" ref={dropdownRef}>
+          <div className="bg-[var(--bg-secondary)] rounded-lg p-4 relative" ref={accentDropdownRef}>
             <button
               onClick={() => setIsAccentDropdownOpen(!isAccentDropdownOpen)}
               className="w-full flex items-center justify-between p-3 rounded-lg border border-[var(--border-color)] transition-all hover:bg-[var(--bg-primary)]"
@@ -152,6 +168,41 @@ export default function ProfilePage() {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Units & Conventions */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Ruler size={20} className="text-[var(--text-secondary)]" />
+              <h2 className="text-lg font-semibold text-[var(--text-primary)]">Units & Conventions</h2>
+            </div>
+            <button
+              onClick={() => router.push('/profile/units')}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--border-color)] hover:bg-[var(--bg-primary)] transition-all"
+              style={{
+                borderColor: currentAccent.value,
+                color: currentAccent.value,
+              }}
+            >
+              <Edit size={16} />
+              <span className="text-sm font-medium">Edit</span>
+            </button>
+          </div>
+          <div className="bg-[var(--bg-secondary)] rounded-lg p-4 space-y-3">
+            <div>
+              <label className="block text-sm font-medium mb-1 text-[var(--text-secondary)]">Weight</label>
+              <p className="text-[var(--text-primary)] font-medium">{getUnitLabel('weight')}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 text-[var(--text-secondary)]">Length</label>
+              <p className="text-[var(--text-primary)] font-medium">{getUnitLabel('length')}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 text-[var(--text-secondary)]">Volume</label>
+              <p className="text-[var(--text-primary)] font-medium">{getUnitLabel('volume')}</p>
+            </div>
           </div>
         </div>
 

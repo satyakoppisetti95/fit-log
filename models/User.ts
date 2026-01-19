@@ -5,6 +5,9 @@ export interface IUser extends Document {
   password: string
   theme?: 'light' | 'dark'
   accentColor?: 'green' | 'blue' | 'orange' | 'purple'
+  weightUnit?: 'kg' | 'lb'
+  lengthUnit?: 'm' | 'ft'
+  volumeUnit?: 'ml' | 'fl oz'
   createdAt: Date
   updatedAt: Date
 }
@@ -34,6 +37,21 @@ const UserSchema: Schema = new Schema(
       type: String,
       enum: ['green', 'blue', 'orange', 'purple'],
       default: 'green',
+    },
+    weightUnit: {
+      type: String,
+      enum: ['kg', 'lb'],
+      default: 'kg',
+    },
+    lengthUnit: {
+      type: String,
+      enum: ['m', 'ft'],
+      default: 'm',
+    },
+    volumeUnit: {
+      type: String,
+      enum: ['ml', 'fl oz'],
+      default: 'ml',
     },
   },
   {

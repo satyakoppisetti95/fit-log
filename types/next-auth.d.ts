@@ -8,6 +8,9 @@ declare module 'next-auth' {
       email?: string | null
       theme?: 'light' | 'dark'
       accentColor?: 'green' | 'blue' | 'orange' | 'purple'
+      weightUnit?: 'kg' | 'lb'
+      lengthUnit?: 'm' | 'ft'
+      volumeUnit?: 'ml' | 'fl oz'
     }
   }
 
@@ -24,5 +27,8 @@ declare module 'next-auth/jwt' {
     name?: string | null
     theme?: 'light' | 'dark'
     accentColor?: 'green' | 'blue' | 'orange' | 'purple'
+    weightUnit?: 'kg' | 'lb'
+    lengthUnit?: 'm' | 'ft'
+    volumeUnit?: 'ml' | 'fl oz'
   }
 }
