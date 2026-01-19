@@ -1,0 +1,13 @@
+PWA Icons Required
+
+For full PWA functionality, you need to add the following icon files to the /public directory:
+
+- icon-192x192.png (192x192 pixels)
+- icon-512x512.png (512x512 pixels)
+- favicon.ico (standard favicon)
+
+You can generate these icons using tools like:
+- https://realfavicongenerator.net/
+- https://www.pwabuilder.com/imageGenerator
+
+The icons should represent the FitLog app logo/branding.
