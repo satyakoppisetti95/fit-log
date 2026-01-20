@@ -14,7 +14,7 @@ export default withAuth(
         
         // Public routes that don't require authentication
         // Note: /api/auth/* is handled by NextAuth automatically
-        const publicRoutes = ['/login', '/api/auth/init-demo', '/api/auth/register']
+        const publicRoutes = ['/login', '/plan', '/api/auth/init-demo', '/api/auth/register']
         const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
         
         // API routes that require auth are handled by NextAuth

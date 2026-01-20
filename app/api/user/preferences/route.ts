@@ -140,22 +140,22 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    console.log('[API] Received update request:', { theme, accentColor, weightUnit, lengthUnit, volumeUnit, weightGoal, stepsGoal, waterGoal })
-    console.log('[API] User ID:', session.user.id)
+    // console.log('[API] Received update request:', { theme, accentColor, weightUnit, lengthUnit, volumeUnit, weightGoal, stepsGoal, waterGoal })
+    // console.log('[API] User ID:', session.user.id)
 
     // Save the document explicitly
     await user.save()
     
-    console.log('[API] User document after save:', {
-      weightUnit: user.weightUnit,
-      lengthUnit: user.lengthUnit,
-      volumeUnit: user.volumeUnit,
-      theme: user.theme,
-      accentColor: user.accentColor,
-      weightGoal: user.weightGoal,
-      stepsGoal: user.stepsGoal,
-      waterGoal: user.waterGoal,
-    })
+    // console.log('[API] User document after save:', {
+    //   weightUnit: user.weightUnit,
+    //   lengthUnit: user.lengthUnit,
+    //   volumeUnit: user.volumeUnit,
+    //   theme: user.theme,
+    //   accentColor: user.accentColor,
+    //   weightGoal: user.weightGoal,
+    //   stepsGoal: user.stepsGoal,
+    //   waterGoal: user.waterGoal,
+    // })
 
     // Return only the requested fields
     const returnData: any = {
@@ -169,7 +169,7 @@ export async function PUT(request: NextRequest) {
       waterGoal: user.waterGoal,
     }
     
-    console.log('[API] Returning data:', returnData)
+    // console.log('[API] Returning data:', returnData)
 
     // Return the actual saved values, not defaults
     return NextResponse.json(returnData)
