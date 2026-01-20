@@ -8,6 +8,9 @@ export interface IUser extends Document {
   weightUnit?: 'kg' | 'lb'
   lengthUnit?: 'm' | 'ft'
   volumeUnit?: 'ml' | 'fl oz'
+  weightGoal?: number // stored in kg
+  stepsGoal?: number
+  waterGoal?: number // stored in ml
   createdAt: Date
   updatedAt: Date
 }
@@ -52,6 +55,18 @@ const UserSchema: Schema = new Schema(
       type: String,
       enum: ['ml', 'fl oz'],
       default: 'ml',
+    },
+    weightGoal: {
+      type: Number,
+      min: 0,
+    },
+    stepsGoal: {
+      type: Number,
+      min: 0,
+    },
+    waterGoal: {
+      type: Number,
+      min: 0,
     },
   },
   {

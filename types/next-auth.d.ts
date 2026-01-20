@@ -11,6 +11,9 @@ declare module 'next-auth' {
       weightUnit?: 'kg' | 'lb'
       lengthUnit?: 'm' | 'ft'
       volumeUnit?: 'ml' | 'fl oz'
+      weightGoal?: number
+      stepsGoal?: number
+      waterGoal?: number
     }
   }
 
@@ -30,5 +33,8 @@ declare module 'next-auth/jwt' {
     weightUnit?: 'kg' | 'lb'
     lengthUnit?: 'm' | 'ft'
     volumeUnit?: 'ml' | 'fl oz'
+    weightGoal?: number
+    stepsGoal?: number
+    waterGoal?: number
   }
 }

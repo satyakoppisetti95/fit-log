@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { BottomNavigation } from '@/components/BottomNavigation'
 import { useTheme } from '@/components/ThemeProvider'
-import { LogOut, Moon, Sun, Palette, ChevronDown, Ruler, Edit } from 'lucide-react'
+import { LogOut, Moon, Sun, Palette, ChevronDown, Ruler, Edit, Target } from 'lucide-react'
 
 export default function ProfilePage() {
   const { theme, accentColor, setTheme, setAccentColor } = useTheme()
@@ -28,6 +28,33 @@ export default function ProfilePage() {
       return lengthUnit === 'm' ? 'Meters (m)' : 'Feet (ft)'
     }
     return volumeUnit === 'ml' ? 'Milliliters (ml)' : 'Fluid Ounces (fl oz)'
+  }
+
+  // Format goals with unit conversion for display
+  const formatWeightGoal = () => {
+    const weightGoal = session?.user?.weightGoal
+    if (!weightGoal) return 'Not set'
+    if (weightUnit === 'lb') {
+      // Convert kg to lb: 1 kg = 2.20462 lb
+      return `${(weightGoal * 2.20462).toFixed(1)} lb`
+    }
+    return `${weightGoal.toFixed(1)} kg`
+  }
+
+  const formatWaterGoal = () => {
+    const waterGoal = session?.user?.waterGoal
+    if (!waterGoal) return 'Not set'
+    if (volumeUnit === 'fl oz') {
+      // Convert ml to fl oz: 1 ml = 0.033814 fl oz
+      return `${(waterGoal * 0.033814).toFixed(1)} fl oz`
+    }
+    return `${Math.round(waterGoal)} ml`
+  }
+
+  const formatStepsGoal = () => {
+    const stepsGoal = session?.user?.stepsGoal
+    if (!stepsGoal) return 'Not set'
+    return `${stepsGoal.toLocaleString()} steps`
   }
 
   const accentColors = [
@@ -66,6 +93,43 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[var(--bg-primary)] pb-20">
       <div className="max-w-md mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-6">Profile</h1>
+
+        {/* Personal Goals */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Target size={20} className="text-[var(--text-secondary)]" />
+              <h2 className="text-lg font-semibold text-[var(--text-primary)]">Personal Goals</h2>
+            </div>
+            <button
+              onClick={() => router.push('/profile/goals')}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--border-color)] hover:bg-[var(--bg-primary)] transition-all"
+              style={{
+                borderColor: currentAccent.value,
+                color: currentAccent.value,
+              }}
+            >
+              <Edit size={16} />
+              <span className="text-sm font-medium">Edit</span>
+            </button>
+          </div>
+          <div className="bg-[var(--bg-secondary)] rounded-lg p-4 space-y-3">
+            <div>
+              <label className="block text-sm font-medium mb-1 text-[var(--text-secondary)]">Daily Calorie Target</label>
+              <p className="text-[var(--text-primary)] font-medium">
+                {session?.user?.weightGoal ? formatWeightGoal() : 'Not set'}
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 text-[var(--text-secondary)]">Step Goal</label>
+              <p className="text-[var(--text-primary)] font-medium">{formatStepsGoal()}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 text-[var(--text-secondary)]">Daily Water Intake</label>
+              <p className="text-[var(--text-primary)] font-medium">{formatWaterGoal()}</p>
+            </div>
+          </div>
+        </div>
 
         {/* Theme Settings - One Line */}
         <div className="mb-6">

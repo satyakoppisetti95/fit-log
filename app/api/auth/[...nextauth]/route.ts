@@ -7,13 +7,16 @@ import User from '@/models/User'
 async function loadUserPreferences(userId: string) {
   try {
     await connectDB()
-    const user = await User.findById(userId).select('theme accentColor weightUnit lengthUnit volumeUnit')
+    const user = await User.findById(userId).select('theme accentColor weightUnit lengthUnit volumeUnit weightGoal stepsGoal waterGoal')
     return {
       theme: (user?.theme as 'light' | 'dark') || 'dark',
       accentColor: (user?.accentColor as 'green' | 'blue' | 'orange' | 'purple') || 'green',
       weightUnit: (user?.weightUnit as 'kg' | 'lb') || 'kg',
       lengthUnit: (user?.lengthUnit as 'm' | 'ft') || 'm',
       volumeUnit: (user?.volumeUnit as 'ml' | 'fl oz') || 'ml',
+      weightGoal: user?.weightGoal,
+      stepsGoal: user?.stepsGoal,
+      waterGoal: user?.waterGoal,
     }
   } catch (error) {
     console.error('Error loading user preferences:', error)
@@ -23,6 +26,9 @@ async function loadUserPreferences(userId: string) {
       weightUnit: 'kg' as const,
       lengthUnit: 'm' as const,
       volumeUnit: 'ml' as const,
+      weightGoal: undefined,
+      stepsGoal: undefined,
+      waterGoal: undefined,
     }
   }
 }
@@ -79,6 +85,9 @@ export const authOptions: NextAuthOptions = {
       token.weightUnit = preferences.weightUnit
       token.lengthUnit = preferences.lengthUnit
       token.volumeUnit = preferences.volumeUnit
+      token.weightGoal = preferences.weightGoal
+      token.stepsGoal = preferences.stepsGoal
+      token.waterGoal = preferences.waterGoal
       }
       
       // Refresh preferences when session is updated
@@ -89,6 +98,9 @@ export const authOptions: NextAuthOptions = {
         token.weightUnit = preferences.weightUnit
         token.lengthUnit = preferences.lengthUnit
         token.volumeUnit = preferences.volumeUnit
+        token.weightGoal = preferences.weightGoal
+        token.stepsGoal = preferences.stepsGoal
+        token.waterGoal = preferences.waterGoal
       }
       
       return token
@@ -102,6 +114,9 @@ export const authOptions: NextAuthOptions = {
         session.user.weightUnit = (token.weightUnit as 'kg' | 'lb') || 'kg'
         session.user.lengthUnit = (token.lengthUnit as 'm' | 'ft') || 'm'
         session.user.volumeUnit = (token.volumeUnit as 'ml' | 'fl oz') || 'ml'
+        session.user.weightGoal = token.weightGoal
+        session.user.stepsGoal = token.stepsGoal
+        session.user.waterGoal = token.waterGoal
       }
       return session
     },
